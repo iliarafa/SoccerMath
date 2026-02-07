@@ -280,22 +280,16 @@ export default function MathSoccer() {
               onMouseEnter={e => e.target.style.background = "#22c55e15"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS BOT</button>
-            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#3b82f6", color: "#2563eb" }}
-              onMouseEnter={e => e.target.style.background = "#3b82f615"}
+            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#fbbf24", color: "#fbbf24" }}
+              onMouseEnter={e => e.target.style.background = "#fbbf2415"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS HUMAN</button>
           </div>
 
-          <div style={S.rules}>
-            <div style={S.rulesTitle}>HOW TO PLAY</div>
-            <div style={{ lineHeight: 2 }}>
-              Solve math problems faster than your opponent.<br/>
-              Fastest correct answer → ball possession.<br/>
-              5 consecutive answers → ⚽ GOAL!<br/>
-              One interception resets the streak.<br/>
-              First to {WIN_AT} goals wins the match.
-            </div>
-          </div>
+          <button
+            onClick={() => setScreen("rules")}
+            style={{ ...S.link, color: "#ffffff", marginTop: 24 }}
+          >HOW TO PLAY</button>
         </div>
       </div>
     );
@@ -314,6 +308,27 @@ export default function MathSoccer() {
               onMouseLeave={e => e.target.style.background = "transparent"}
             >{l}</button>
           ))}
+          <br />
+          <button onClick={() => setScreen("menu")} style={S.link}>← BACK</button>
+        </div>
+      </div>
+    );
+  }
+
+  // --- RULES ---
+  if (screen === "rules") {
+    return (
+      <div style={S.wrap}>
+        <style>{globalCSS}</style>
+        <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out", maxWidth: 320 }}>
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#ffffff" }}>HOW TO PLAY</h2>
+          <div style={{ color: "#94a3b8", fontSize: 14, lineHeight: 2.2, textAlign: "left" }}>
+            Solve math problems faster than your opponent.<br/><br/>
+            Fastest correct answer → ball possession.<br/><br/>
+            5 consecutive answers → ⚽ GOAL!<br/><br/>
+            One interception resets the streak.<br/><br/>
+            First to {WIN_AT} goals wins the match.
+          </div>
           <br />
           <button onClick={() => setScreen("menu")} style={S.link}>← BACK</button>
         </div>
@@ -570,21 +585,21 @@ const globalCSS = `
 
 const S = {
   wrap: {
-    width: "100%", height: "100vh", background: "#ffffff",
+    width: "100%", height: "100vh", background: "#001e00",
     fontFamily: FONT, color: "#1e293b", display: "flex",
     flexDirection: "column", alignItems: "center", justifyContent: "center",
     padding: "env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px) 0",
     userSelect: "none", overflow: "hidden",
   },
   menuBall: {
-    fontSize: 56, marginBottom: 8, animation: "bounce 1.2s infinite ease-in-out",
+    fontSize: 56, marginBottom: 8,
   },
   title: {
     fontSize: 64, fontWeight: 800, letterSpacing: 6, lineHeight: 1.05,
-    color: "#1e293b", marginBottom: 8,
+    color: "#ffffff", marginBottom: 8,
   },
   subtitle: {
-    fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#64748b",
+    fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#60a5fa",
   },
   btn: {
     fontFamily: FONT, fontSize: 18, fontWeight: 700, letterSpacing: 3,
@@ -702,15 +717,15 @@ const S = {
   },
   // Problem area
   problemArea: {
-    textAlign: "center", padding: "12px 0 8px", flexShrink: 0,
+    textAlign: "center", padding: "12px 0 30px", flexShrink: 0,
   },
   problemText: {
     fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
     letterSpacing: 2, color: "#1e293b",
   },
   countdownText: {
-    fontSize: 48, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
-    color: "#f59e0b", letterSpacing: 4,
+    fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    color: "#ef4444", letterSpacing: 2,
     animation: "fadeUp 0.3s ease-out",
   },
   answerDisplay: {
