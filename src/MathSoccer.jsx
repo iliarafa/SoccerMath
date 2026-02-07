@@ -348,7 +348,7 @@ export default function MathSoccer() {
     <div style={S.wrap}>
       <style>{globalCSS}</style>
 
-      <div style={{ width: "100%", maxWidth: 420, padding: "0 8px" }}>
+      <div style={S.gameContainer}>
 
         {/* SCOREBOARD */}
         <div style={S.scoreboard}>
@@ -373,7 +373,7 @@ export default function MathSoccer() {
               boxShadow: filled ? "0 0 8px #60a5fa60" : "none",
             }} />;
           }).reverse()}
-          <div style={{ ...S.streakDot, width: 10, height: 10, background: "#fff", boxShadow: "0 0 6px #fff60" }}>⚽</div>
+          <div style={{ ...S.streakDot, width: 8, height: 8, background: "#fff", boxShadow: "0 0 6px #fff60" }}>⚽</div>
           {Array.from({ length: GOAL_AT }).map((_, i) => {
             const filled = poss === "p1" && i < streak;
             return <div key={`r${i}`} style={{
@@ -527,12 +527,12 @@ export default function MathSoccer() {
 
         {/* VS HUMAN note */}
         {vsMode === "human" && countdown === null && !goalAnim && (
-          <div style={{ textAlign: "center", marginTop: 8, fontFamily: MONO, fontSize: 11, color: "#475569" }}>
+          <div style={{ textAlign: "center", marginTop: 4, fontFamily: MONO, fontSize: 10, color: "#475569", flexShrink: 0 }}>
             P2: use keyboard (numbers + Enter)
           </div>
         )}
 
-        <div style={{ textAlign: "center", marginTop: 12 }}>
+        <div style={{ textAlign: "center", marginTop: 6, flexShrink: 0 }}>
           <button onClick={() => {
             if (botTimer.current) clearTimeout(botTimer.current);
             setActive(false); activeRef.current = false;
@@ -551,6 +551,7 @@ const MONO = `'Space Mono', monospace`;
 const globalCSS = `
   @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body, #root { height: 100%; overflow: hidden; }
   input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
   @keyframes shake { 0%,100% { transform:translateX(0); } 25% { transform:translateX(-6px); } 75% { transform:translateX(6px); } }
@@ -560,10 +561,11 @@ const globalCSS = `
 
 const S = {
   wrap: {
-    width: "100%", minHeight: "100vh", background: "#0f172a",
+    width: "100%", height: "100vh", background: "#0f172a",
     fontFamily: FONT, color: "#e2e8f0", display: "flex",
     flexDirection: "column", alignItems: "center", justifyContent: "center",
-    padding: "20px 0", userSelect: "none",
+    padding: "env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px) 0",
+    userSelect: "none", overflow: "hidden",
   },
   menuBall: {
     fontSize: 56, marginBottom: 8, animation: "bounce 1.2s infinite ease-in-out",
@@ -594,40 +596,46 @@ const S = {
     fontFamily: FONT, fontSize: 13, letterSpacing: 2, color: "#4ade80",
     marginBottom: 8, fontWeight: 700,
   },
+  // Game container for playing screen
+  gameContainer: {
+    width: "100%", maxWidth: 420, padding: "0 8px",
+    display: "flex", flexDirection: "column",
+    height: "100%", overflow: "hidden",
+  },
   // Scoreboard
   scoreboard: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    padding: "16px 0 8px", gap: 0,
+    padding: "4px 0 2px", gap: 0, flexShrink: 0,
   },
   scoreTeam: {
-    display: "flex", alignItems: "center", gap: 12, flex: 1,
+    display: "flex", alignItems: "center", gap: 8, flex: 1,
     justifyContent: "center",
   },
   scoreLabel: {
-    fontSize: 14, fontWeight: 700, letterSpacing: 2, opacity: 0.6,
+    fontSize: 12, fontWeight: 700, letterSpacing: 2, opacity: 0.6,
   },
   scoreNum: {
-    fontSize: 64, fontWeight: 800, fontFamily: FONT, lineHeight: 1,
+    fontSize: 44, fontWeight: 800, fontFamily: FONT, lineHeight: 1,
   },
   scoreDivider: {
-    fontSize: 48, fontWeight: 800, color: "#334155", padding: "0 8px",
+    fontSize: 36, fontWeight: 800, color: "#334155", padding: "0 4px",
   },
   // Streak bar
   streakBar: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    gap: 6, padding: "6px 0 10px",
+    gap: 5, padding: "2px 0 6px", flexShrink: 0,
   },
   streakDot: {
-    width: 14, height: 14, borderRadius: "50%",
+    width: 12, height: 12, borderRadius: "50%",
     transition: "all 0.3s", display: "flex", alignItems: "center",
-    justifyContent: "center", fontSize: 8,
+    justifyContent: "center", fontSize: 7,
   },
   // Field
   field: {
-    position: "relative", width: "100%", paddingBottom: "60%",
-    borderRadius: 10, overflow: "hidden",
+    position: "relative", width: "100%", paddingBottom: "52%",
+    borderRadius: 8, overflow: "hidden",
     boxShadow: "0 4px 24px #00000040, inset 0 0 40px #00000020",
-    border: "3px solid #1e5631",
+    border: "3px solid #1e5631", flexShrink: 0,
   },
   fieldBorder: {
     position: "absolute", top: "4%", left: "3%", right: "3%", bottom: "4%",
@@ -674,44 +682,45 @@ const S = {
   },
   // Message
   msgBar: {
-    textAlign: "center", height: 24, marginTop: 6,
-    fontFamily: MONO, fontSize: 13, letterSpacing: 1, color: "#94a3b8",
+    textAlign: "center", height: 18, marginTop: 4,
+    fontFamily: MONO, fontSize: 11, letterSpacing: 1, color: "#94a3b8",
+    flexShrink: 0,
   },
   // Problem area
   problemArea: {
-    textAlign: "center", padding: "10px 0 4px",
+    textAlign: "center", padding: "6px 0 2px", flexShrink: 0,
   },
   problemText: {
-    fontSize: 40, fontWeight: 800, fontFamily: MONO, letterSpacing: 4,
+    fontSize: 32, fontWeight: 800, fontFamily: MONO, letterSpacing: 3,
     color: "#fff",
   },
   answerDisplay: {
-    margin: "8px auto 0", width: 160, padding: "8px 12px",
-    fontSize: 32, fontWeight: 700, fontFamily: MONO, textAlign: "center",
-    background: "#1e293b", borderRadius: 8, border: "2px solid #334155",
-    color: "#fff", minHeight: 48, lineHeight: "32px",
+    margin: "4px auto 0", width: 140, padding: "6px 10px",
+    fontSize: 26, fontWeight: 700, fontFamily: MONO, textAlign: "center",
+    background: "#1e293b", borderRadius: 6, border: "2px solid #334155",
+    color: "#fff", minHeight: 40, lineHeight: "26px",
     transition: "border-color 0.2s",
   },
   // Numpad
   numpad: {
-    maxWidth: 300, margin: "8px auto 0",
+    maxWidth: 280, margin: "6px auto 0", flexShrink: 0,
   },
   numpadRow: {
-    display: "flex", gap: 8, marginBottom: 8, justifyContent: "center",
+    display: "flex", gap: 6, marginBottom: 6, justifyContent: "center",
   },
   numKey: {
-    width: 80, height: 56, fontSize: 26, fontWeight: 700,
-    fontFamily: FONT, border: "2px solid #334155", borderRadius: 10,
+    width: 72, height: 48, fontSize: 22, fontWeight: 700,
+    fontFamily: FONT, border: "2px solid #334155", borderRadius: 8,
     background: "#1e293b", color: "#e2e8f0", cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center",
     transition: "all 0.1s", lineHeight: 1,
     WebkitTapHighlightColor: "transparent",
   },
   numKeySubmit: {
-    background: "#166534", borderColor: "#22c55e", fontSize: 28,
+    background: "#166534", borderColor: "#22c55e", fontSize: 24,
   },
   numKeyClear: {
-    color: "#94a3b8", fontSize: 22,
+    color: "#94a3b8", fontSize: 18,
   },
   finalScore: {
     fontSize: 72, fontWeight: 800, fontFamily: FONT, margin: "16px 0",
