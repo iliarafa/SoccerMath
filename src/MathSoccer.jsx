@@ -598,7 +598,7 @@ const S = {
   },
   title: {
     fontSize: 64, fontWeight: 800, letterSpacing: 6, lineHeight: 1.05,
-    color: "#ffffff", marginBottom: 8,
+    color: "#ffffff", marginTop: -6, marginBottom: 8,
   },
   subtitle: {
     fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#ffffff",
