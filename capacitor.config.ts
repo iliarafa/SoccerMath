@@ -11,11 +11,12 @@ const config: CapacitorConfig = {
     contentInset: 'always',
     preferredContentMode: 'mobile',
     scheme: 'Math Soccer',
+    backgroundColor: '#001e00',
   },
   plugins: {
     StatusBar: {
       style: 'DARK',
-      backgroundColor: '#0f172a',
+      backgroundColor: '#001e00',
     },
     Keyboard: {
       resize: 'none',

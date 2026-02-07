@@ -272,7 +272,7 @@ export default function MathSoccer() {
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.6s ease-out" }}>
           <div style={S.menuBall}>⚽</div>
-          <h1 style={S.title}>MATH<br/>SOCCER</h1>
+          <h1 style={S.title}>SOCCER<br/>MATH</h1>
           <p style={S.subtitle}>ANSWER FAST · SCORE GOALS</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "center", marginTop: 40 }}>
@@ -301,7 +301,7 @@ export default function MathSoccer() {
       <div style={S.wrap}>
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out" }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#1e293b" }}>DIFFICULTY</h2>
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#ffffff" }}>DIFFICULTY</h2>
           {[["easy", "EASY", "#22c55e"], ["medium", "MEDIUM", "#f59e0b"], ["hard", "HARD", "#ef4444"]].map(([k, l, c]) => (
             <button key={k} onClick={() => beginGame("bot", k)} style={{ ...S.btn, borderColor: c, color: c, marginBottom: 12 }}
               onMouseEnter={e => e.target.style.background = `${c}15`}
@@ -309,7 +309,7 @@ export default function MathSoccer() {
             >{l}</button>
           ))}
           <br />
-          <button onClick={() => setScreen("menu")} style={S.link}>← BACK</button>
+          <button onClick={() => setScreen("menu")} style={{ ...S.link, color: "#ffffff" }}>← BACK</button>
         </div>
       </div>
     );
@@ -368,12 +368,12 @@ export default function MathSoccer() {
 
         {/* SCOREBOARD */}
         <div style={S.scoreboard}>
-          <div style={{ ...S.scoreTeam, color: poss === "p1" ? "#1e293b" : "#94a3b8" }}>
+          <div style={{ ...S.scoreTeam, color: poss === "p1" ? "#ffffff" : "#64748b" }}>
             <div style={S.scoreLabel}>P1</div>
             <div style={S.scoreNum}>{scores.p1}</div>
           </div>
           <div style={S.scoreDivider}>:</div>
-          <div style={{ ...S.scoreTeam, color: poss === "p2" ? "#1e293b" : "#94a3b8" }}>
+          <div style={{ ...S.scoreTeam, color: poss === "p2" ? "#ffffff" : "#64748b" }}>
             <div style={S.scoreNum}>{scores.p2}</div>
             <div style={S.scoreLabel}>{p2Label}</div>
           </div>
@@ -585,11 +585,13 @@ const globalCSS = `
 
 const S = {
   wrap: {
-    width: "100%", height: "100vh", background: "#001e00",
+    width: "100%", minHeight: "100vh", background: "#001e00",
     fontFamily: FONT, color: "#1e293b", display: "flex",
     flexDirection: "column", alignItems: "center", justifyContent: "center",
-    padding: "env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px) 0",
+    paddingTop: "env(safe-area-inset-top, 12px)",
+    paddingBottom: "env(safe-area-inset-bottom, 12px)",
     userSelect: "none", overflow: "hidden",
+    boxSizing: "border-box",
   },
   menuBall: {
     fontSize: 56, marginBottom: 8,
@@ -599,7 +601,7 @@ const S = {
     color: "#ffffff", marginBottom: 8,
   },
   subtitle: {
-    fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#60a5fa",
+    fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#ffffff",
   },
   btn: {
     fontFamily: FONT, fontSize: 18, fontWeight: 700, letterSpacing: 3,
@@ -628,12 +630,17 @@ const S = {
   },
   // Inner padding for non-numpad elements
   gameInner: {
-    padding: "16px 8px 0",
+    padding: "8px 8px 0",
+    flex: 1,
+    minHeight: 0,
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
   },
   // Scoreboard
   scoreboard: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    padding: "4px 0 0", gap: 0, flexShrink: 0,
+    padding: "0", gap: 0, flexShrink: 0,
   },
   scoreTeam: {
     display: "flex", alignItems: "center", gap: 8, flex: 1,
@@ -643,7 +650,8 @@ const S = {
     fontSize: 12, fontWeight: 700, letterSpacing: 2, opacity: 0.6,
   },
   scoreNum: {
-    fontSize: 44, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", lineHeight: 1,
+    fontSize: 36, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", lineHeight: 1,
+    color: "#ffffff",
   },
   scoreDivider: {
     fontSize: 36, fontWeight: 800, color: "#94a3b8", padding: "0 4px",
@@ -651,20 +659,20 @@ const S = {
   // Streak bar
   streakBar: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    gap: 5, padding: "16px 0", flexShrink: 0,
+    gap: 4, padding: "6px 0", flexShrink: 0,
   },
   streakDot: {
-    width: 12, height: 12, borderRadius: 2,
+    width: 10, height: 10, borderRadius: 2,
     transition: "all 0.3s", display: "flex", alignItems: "center",
-    justifyContent: "center", fontSize: 7,
+    justifyContent: "center", fontSize: 6,
   },
   streakDotEmpty: "#e2e8f0",
   // Field
   field: {
-    position: "relative", width: "100%", paddingBottom: "52%",
+    position: "relative", width: "100%", aspectRatio: "2.2 / 1",
     borderRadius: 8, overflow: "hidden",
     boxShadow: "0 4px 24px #00000040, inset 0 0 40px #00000020",
-    border: "3px solid #1e5631", flexShrink: 0,
+    border: "3px solid #1e5631", flexShrink: 1, minHeight: 80, maxHeight: 160,
   },
   fieldBorder: {
     position: "absolute", top: "4%", left: "3%", right: "3%", bottom: "4%",
@@ -711,29 +719,31 @@ const S = {
   },
   // Message
   msgBar: {
-    textAlign: "center", height: 18, marginTop: 4,
-    fontFamily: MONO, fontSize: 11, letterSpacing: 1, color: "#64748b",
+    textAlign: "center", height: 16, marginTop: 2,
+    fontFamily: MONO, fontSize: 10, letterSpacing: 1, color: "#ffffff",
     flexShrink: 0,
   },
   // Problem area
   problemArea: {
-    textAlign: "center", padding: "12px 0 30px", flexShrink: 0,
+    textAlign: "center", padding: "4px 0", flex: 1,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    minHeight: 40,
   },
   problemText: {
-    fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
-    letterSpacing: 2, color: "#1e293b",
+    fontSize: 28, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    letterSpacing: 2, color: "#ffffff",
   },
   countdownText: {
-    fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    fontSize: 28, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
     color: "#ef4444", letterSpacing: 2,
     animation: "fadeUp 0.3s ease-out",
   },
   answerDisplay: {
-    margin: "4px 0 0", width: "100%", padding: "12px 16px",
-    fontSize: 28, fontWeight: 400, fontFamily: "system-ui, -apple-system, sans-serif", textAlign: "center",
+    margin: "0", width: "100%", padding: "8px 16px",
+    fontSize: 24, fontWeight: 400, fontFamily: "system-ui, -apple-system, sans-serif", textAlign: "center",
     background: "#f5f5f5", borderRadius: 0, border: "1px solid #e0e0e0",
-    color: "#1e293b", minHeight: 50, lineHeight: "28px",
-    position: "relative",
+    color: "#1e293b", height: 44, lineHeight: "28px",
+    position: "relative", boxSizing: "border-box",
   },
   answerClear: {
     position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
@@ -750,18 +760,21 @@ const S = {
     display: "flex", gap: 0, marginBottom: 0, justifyContent: "center",
   },
   numKey: {
-    flex: 1, height: 56, fontSize: 28, fontWeight: 400,
-    fontFamily: "system-ui, -apple-system, sans-serif", border: "1px solid #e0e0e0", borderRadius: 0,
-    background: "#ffffff", color: "#1e293b", cursor: "pointer",
+    flex: 1, height: 48, fontSize: 24, fontWeight: 400,
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    border: "1px solid rgba(255,255,255,0.2)", borderRadius: 0,
+    background: "rgba(255,255,255,0.15)",
+    backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
+    color: "#ffffff", cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center",
     transition: "all 0.1s", lineHeight: 1,
     WebkitTapHighlightColor: "transparent",
   },
   numKeySubmit: {
-    background: "#374151", borderColor: "#374151", color: "#ffffff", fontSize: 24,
+    background: "rgba(34,197,94,0.4)", borderColor: "rgba(34,197,94,0.5)", color: "#ffffff", fontSize: 24,
   },
   numKeyClear: {
-    color: "#1e293b", fontSize: 24,
+    color: "#ffffff", fontSize: 24,
   },
   finalScore: {
     fontSize: 72, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", margin: "16px 0",
