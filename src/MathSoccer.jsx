@@ -271,7 +271,7 @@ export default function MathSoccer() {
       <div style={S.wrap}>
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.6s ease-out" }}>
-          <div style={S.menuBall}>⚽</div>
+          <img src="/soccer-ball.png" alt="Soccer ball" style={S.menuBall} />
           <h1 style={S.title}>SOCCER<br/>MATH</h1>
           <p style={S.subtitle}>ANSWER FAST · SCORE GOALS</p>
 
@@ -594,7 +594,7 @@ const S = {
     boxSizing: "border-box",
   },
   menuBall: {
-    fontSize: 56, marginBottom: 8,
+    width: 240, height: 240, marginBottom: 8, objectFit: "contain",
   },
   title: {
     fontSize: 64, fontWeight: 800, letterSpacing: 6, lineHeight: 1.05,
