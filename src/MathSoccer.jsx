@@ -276,12 +276,12 @@ export default function MathSoccer() {
           <p style={S.subtitle}>ANSWER FAST · SCORE GOALS</p>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "center", marginTop: 40 }}>
-            <button onClick={() => { setVsMode("bot"); setScreen("difficulty"); }} style={{ ...S.btn, borderColor: "#4ade80", color: "#4ade80" }}
-              onMouseEnter={e => e.target.style.background = "#4ade8015"}
+            <button onClick={() => { setVsMode("bot"); setScreen("difficulty"); }} style={{ ...S.btn, borderColor: "#22c55e", color: "#16a34a" }}
+              onMouseEnter={e => e.target.style.background = "#22c55e15"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS BOT</button>
-            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#60a5fa", color: "#60a5fa" }}
-              onMouseEnter={e => e.target.style.background = "#60a5fa15"}
+            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#3b82f6", color: "#2563eb" }}
+              onMouseEnter={e => e.target.style.background = "#3b82f615"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS HUMAN</button>
           </div>
@@ -307,8 +307,8 @@ export default function MathSoccer() {
       <div style={S.wrap}>
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out" }}>
-          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#e2e8f0" }}>DIFFICULTY</h2>
-          {[["easy", "EASY", "#4ade80"], ["medium", "MEDIUM", "#fbbf24"], ["hard", "HARD", "#f87171"]].map(([k, l, c]) => (
+          <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#1e293b" }}>DIFFICULTY</h2>
+          {[["easy", "EASY", "#22c55e"], ["medium", "MEDIUM", "#f59e0b"], ["hard", "HARD", "#ef4444"]].map(([k, l, c]) => (
             <button key={k} onClick={() => beginGame("bot", k)} style={{ ...S.btn, borderColor: c, color: c, marginBottom: 12 }}
               onMouseEnter={e => e.target.style.background = `${c}15`}
               onMouseLeave={e => e.target.style.background = "transparent"}
@@ -330,10 +330,10 @@ export default function MathSoccer() {
         <div style={{ textAlign: "center", animation: "fadeUp 0.6s ease-out" }}>
           <div style={{ fontSize: 72, marginBottom: 12 }}>🏆</div>
           <div style={S.finalScore}>{scores.p1} : {scores.p2}</div>
-          <p style={{ fontSize: 22, fontWeight: 700, color: "#fbbf24", letterSpacing: 3, marginBottom: 36 }}>{w} WINS</p>
+          <p style={{ fontSize: 22, fontWeight: 700, color: "#16a34a", letterSpacing: 3, marginBottom: 36 }}>{w} WINS</p>
           <div style={{ display: "flex", gap: 14, justifyContent: "center" }}>
-            <button onClick={() => beginGame(vsMode, diff)} style={{ ...S.btn, borderColor: "#4ade80", color: "#4ade80", padding: "12px 32px" }}>REMATCH</button>
-            <button onClick={() => setScreen("menu")} style={{ ...S.btn, borderColor: "#475569", color: "#94a3b8", padding: "12px 32px" }}>MENU</button>
+            <button onClick={() => beginGame(vsMode, diff)} style={{ ...S.btn, borderColor: "#22c55e", color: "#16a34a", padding: "12px 32px" }}>REMATCH</button>
+            <button onClick={() => setScreen("menu")} style={{ ...S.btn, borderColor: "#cbd5e1", color: "#64748b", padding: "12px 32px" }}>MENU</button>
           </div>
         </div>
       </div>
@@ -349,15 +349,16 @@ export default function MathSoccer() {
       <style>{globalCSS}</style>
 
       <div style={S.gameContainer}>
+        <div style={S.gameInner}>
 
         {/* SCOREBOARD */}
         <div style={S.scoreboard}>
-          <div style={{ ...S.scoreTeam, color: poss === "p1" ? "#fff" : "#94a3b8" }}>
+          <div style={{ ...S.scoreTeam, color: poss === "p1" ? "#1e293b" : "#94a3b8" }}>
             <div style={S.scoreLabel}>P1</div>
             <div style={S.scoreNum}>{scores.p1}</div>
           </div>
           <div style={S.scoreDivider}>:</div>
-          <div style={{ ...S.scoreTeam, color: poss === "p2" ? "#fff" : "#94a3b8" }}>
+          <div style={{ ...S.scoreTeam, color: poss === "p2" ? "#1e293b" : "#94a3b8" }}>
             <div style={S.scoreNum}>{scores.p2}</div>
             <div style={S.scoreLabel}>{p2Label}</div>
           </div>
@@ -369,17 +370,17 @@ export default function MathSoccer() {
             const filled = poss === "p2" && i < streak;
             return <div key={`l${i}`} style={{
               ...S.streakDot,
-              background: filled ? "#60a5fa" : "#1e293b",
-              boxShadow: filled ? "0 0 8px #60a5fa60" : "none",
+              background: filled ? "#3b82f6" : "#e2e8f0",
+              boxShadow: filled ? "0 0 8px #3b82f660" : "none",
             }} />;
           }).reverse()}
-          <div style={{ ...S.streakDot, width: 8, height: 8, background: "#fff", boxShadow: "0 0 6px #fff60" }}>⚽</div>
+          <div style={{ ...S.streakDot, width: 8, height: 8, background: "#94a3b8", boxShadow: "0 0 6px #94a3b860" }}>⚽</div>
           {Array.from({ length: GOAL_AT }).map((_, i) => {
             const filled = poss === "p1" && i < streak;
             return <div key={`r${i}`} style={{
               ...S.streakDot,
-              background: filled ? "#4ade80" : "#1e293b",
-              boxShadow: filled ? "0 0 8px #4ade8060" : "none",
+              background: filled ? "#22c55e" : "#e2e8f0",
+              boxShadow: filled ? "0 0 8px #22c55e60" : "none",
             }} />;
           })}
         </div>
@@ -458,14 +459,6 @@ export default function MathSoccer() {
             </div>
           )}
 
-          {/* Countdown overlay */}
-          {countdown !== null && (
-            <div style={S.goalOverlay}>
-              <div style={{ ...S.goalText, fontSize: 64, color: "#fbbf24" }}>
-                {countdown || "GO!"}
-              </div>
-            </div>
-          )}
         </div>
 
         {/* MESSAGE */}
@@ -476,47 +469,63 @@ export default function MathSoccer() {
         </div>
 
         {/* PROBLEM + ANSWER */}
+        {countdown !== null && !goalAnim && (
+          <div style={S.problemArea}>
+            <div style={S.countdownText}>
+              {countdown || "GO!"}
+            </div>
+          </div>
+        )}
         {prob && countdown === null && !goalAnim && (
           <div style={S.problemArea}>
             <div style={S.problemText}>
               {prob.a} {prob.op} {prob.b}
             </div>
+          </div>
+        )}
+        </div>{/* end gameInner */}
+
+        {/* NUMPAD WITH INPUT */}
+        {!goalAnim && (
+          <div style={S.numpad}>
+            {/* Answer display row */}
             <div style={{
               ...S.answerDisplay,
               animation: wrongShake ? "shake 0.3s ease" : "none",
-              borderColor: wrongShake ? "#f87171" : "#334155",
+              background: wrongShake ? "#ffcdd2" : "#f5f5f5",
             }}>
               {negative && input.length > 0 ? "−" : ""}{input || " "}
+              <button
+                onClick={() => handleNumpad("clear")}
+                style={S.answerClear}
+              >
+                ✕
+              </button>
             </div>
-          </div>
-        )}
-
-        {/* NUMPAD */}
-        {countdown === null && !goalAnim && (
-          <div style={S.numpad}>
+            {/* Number rows */}
             {[
               ["7", "8", "9"],
               ["4", "5", "6"],
               ["1", "2", "3"],
-              ["clear", "0", "submit"],
+              ["neg", "0", "submit"],
             ].map((row, ri) => (
               <div key={ri} style={S.numpadRow}>
                 {row.map((key) => {
                   const isSubmit = key === "submit";
-                  const isClear = key === "clear";
+                  const isNeg = key === "neg";
                   return (
                     <button
                       key={key}
                       onClick={() => handleNumpad(key)}
-                      disabled={!active && !isClear}
+                      disabled={!active}
                       style={{
                         ...S.numKey,
                         ...(isSubmit ? S.numKeySubmit : {}),
-                        ...(isClear ? S.numKeyClear : {}),
-                        opacity: (!active && !isClear) ? 0.4 : 1,
+                        ...(isNeg ? S.numKeyClear : {}),
+                        opacity: !active ? 0.5 : 1,
                       }}
                     >
-                      {isSubmit ? "⚽" : isClear ? "←" : key}
+                      {isSubmit ? "⚽" : isNeg ? "±" : key}
                     </button>
                   );
                 })}
@@ -527,12 +536,12 @@ export default function MathSoccer() {
 
         {/* VS HUMAN note */}
         {vsMode === "human" && countdown === null && !goalAnim && (
-          <div style={{ textAlign: "center", marginTop: 4, fontFamily: MONO, fontSize: 10, color: "#475569", flexShrink: 0 }}>
+          <div style={{ textAlign: "center", marginTop: 4, fontFamily: MONO, fontSize: 10, color: "#64748b", flexShrink: 0, padding: "0 8px" }}>
             P2: use keyboard (numbers + Enter)
           </div>
         )}
 
-        <div style={{ textAlign: "center", marginTop: 6, flexShrink: 0 }}>
+        <div style={{ textAlign: "center", marginTop: 6, flexShrink: 0, padding: "0 8px" }}>
           <button onClick={() => {
             if (botTimer.current) clearTimeout(botTimer.current);
             setActive(false); activeRef.current = false;
@@ -545,11 +554,11 @@ export default function MathSoccer() {
 }
 
 // ============ STYLES ============
-const FONT = `'Oswald', sans-serif`;
-const MONO = `'Space Mono', monospace`;
+const FONT = `'Marcellus', serif`;
+const MONO = `'Marcellus', serif`;
 
 const globalCSS = `
-  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Marcellus&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body, #root { height: 100%; overflow: hidden; }
   input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -561,8 +570,8 @@ const globalCSS = `
 
 const S = {
   wrap: {
-    width: "100%", height: "100vh", background: "#0f172a",
-    fontFamily: FONT, color: "#e2e8f0", display: "flex",
+    width: "100%", height: "100vh", background: "#ffffff",
+    fontFamily: FONT, color: "#1e293b", display: "flex",
     flexDirection: "column", alignItems: "center", justifyContent: "center",
     padding: "env(safe-area-inset-top, 12px) 0 env(safe-area-inset-bottom, 12px) 0",
     userSelect: "none", overflow: "hidden",
@@ -572,7 +581,7 @@ const S = {
   },
   title: {
     fontSize: 64, fontWeight: 800, letterSpacing: 6, lineHeight: 1.05,
-    color: "#fff", marginBottom: 8,
+    color: "#1e293b", marginBottom: 8,
   },
   subtitle: {
     fontFamily: MONO, fontSize: 11, letterSpacing: 3, color: "#64748b",
@@ -585,27 +594,31 @@ const S = {
   },
   link: {
     fontFamily: MONO, fontSize: 12, background: "none", border: "none",
-    color: "#475569", cursor: "pointer", letterSpacing: 1, padding: 8,
+    color: "#64748b", cursor: "pointer", letterSpacing: 1, padding: 8,
   },
   rules: {
-    marginTop: 36, padding: "16px 24px", background: "#1e293b60",
+    marginTop: 36, padding: "16px 24px", background: "#f1f5f9",
     borderRadius: 10, maxWidth: 320, textAlign: "left", margin: "36px auto 0",
-    fontFamily: MONO, fontSize: 11, color: "#94a3b8", lineHeight: 1.6,
+    fontFamily: MONO, fontSize: 11, color: "#475569", lineHeight: 1.6,
   },
   rulesTitle: {
-    fontFamily: FONT, fontSize: 13, letterSpacing: 2, color: "#4ade80",
+    fontFamily: FONT, fontSize: 13, letterSpacing: 2, color: "#16a34a",
     marginBottom: 8, fontWeight: 700,
   },
   // Game container for playing screen
   gameContainer: {
-    width: "100%", maxWidth: 420, padding: "0 8px",
+    width: "100%", maxWidth: 420, padding: "0",
     display: "flex", flexDirection: "column",
     height: "100%", overflow: "hidden",
+  },
+  // Inner padding for non-numpad elements
+  gameInner: {
+    padding: "16px 8px 0",
   },
   // Scoreboard
   scoreboard: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    padding: "4px 0 2px", gap: 0, flexShrink: 0,
+    padding: "4px 0 0", gap: 0, flexShrink: 0,
   },
   scoreTeam: {
     display: "flex", alignItems: "center", gap: 8, flex: 1,
@@ -615,21 +628,22 @@ const S = {
     fontSize: 12, fontWeight: 700, letterSpacing: 2, opacity: 0.6,
   },
   scoreNum: {
-    fontSize: 44, fontWeight: 800, fontFamily: FONT, lineHeight: 1,
+    fontSize: 44, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", lineHeight: 1,
   },
   scoreDivider: {
-    fontSize: 36, fontWeight: 800, color: "#334155", padding: "0 4px",
+    fontSize: 36, fontWeight: 800, color: "#94a3b8", padding: "0 4px",
   },
   // Streak bar
   streakBar: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    gap: 5, padding: "2px 0 6px", flexShrink: 0,
+    gap: 5, padding: "16px 0", flexShrink: 0,
   },
   streakDot: {
-    width: 12, height: 12, borderRadius: "50%",
+    width: 12, height: 12, borderRadius: 2,
     transition: "all 0.3s", display: "flex", alignItems: "center",
     justifyContent: "center", fontSize: 7,
   },
+  streakDotEmpty: "#e2e8f0",
   // Field
   field: {
     position: "relative", width: "100%", paddingBottom: "52%",
@@ -683,47 +697,59 @@ const S = {
   // Message
   msgBar: {
     textAlign: "center", height: 18, marginTop: 4,
-    fontFamily: MONO, fontSize: 11, letterSpacing: 1, color: "#94a3b8",
+    fontFamily: MONO, fontSize: 11, letterSpacing: 1, color: "#64748b",
     flexShrink: 0,
   },
   // Problem area
   problemArea: {
-    textAlign: "center", padding: "6px 0 2px", flexShrink: 0,
+    textAlign: "center", padding: "12px 0 8px", flexShrink: 0,
   },
   problemText: {
-    fontSize: 32, fontWeight: 800, fontFamily: MONO, letterSpacing: 3,
-    color: "#fff",
+    fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    letterSpacing: 2, color: "#1e293b",
+  },
+  countdownText: {
+    fontSize: 48, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    color: "#f59e0b", letterSpacing: 4,
+    animation: "fadeUp 0.3s ease-out",
   },
   answerDisplay: {
-    margin: "4px auto 0", width: 140, padding: "6px 10px",
-    fontSize: 26, fontWeight: 700, fontFamily: MONO, textAlign: "center",
-    background: "#1e293b", borderRadius: 6, border: "2px solid #334155",
-    color: "#fff", minHeight: 40, lineHeight: "26px",
-    transition: "border-color 0.2s",
+    margin: "4px 0 0", width: "100%", padding: "12px 16px",
+    fontSize: 28, fontWeight: 400, fontFamily: "system-ui, -apple-system, sans-serif", textAlign: "center",
+    background: "#f5f5f5", borderRadius: 0, border: "1px solid #e0e0e0",
+    color: "#1e293b", minHeight: 50, lineHeight: "28px",
+    position: "relative",
+  },
+  answerClear: {
+    position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
+    width: 32, height: 32, borderRadius: "50%", border: "2px solid #9e9e9e",
+    background: "transparent", color: "#9e9e9e", fontSize: 18,
+    display: "flex", alignItems: "center", justifyContent: "center",
+    cursor: "pointer",
   },
   // Numpad
   numpad: {
-    maxWidth: 280, margin: "6px auto 0", flexShrink: 0,
+    width: "100%", margin: "0", flexShrink: 0,
   },
   numpadRow: {
-    display: "flex", gap: 6, marginBottom: 6, justifyContent: "center",
+    display: "flex", gap: 0, marginBottom: 0, justifyContent: "center",
   },
   numKey: {
-    width: 72, height: 48, fontSize: 22, fontWeight: 700,
-    fontFamily: FONT, border: "2px solid #334155", borderRadius: 8,
-    background: "#1e293b", color: "#e2e8f0", cursor: "pointer",
+    flex: 1, height: 56, fontSize: 28, fontWeight: 400,
+    fontFamily: "system-ui, -apple-system, sans-serif", border: "1px solid #e0e0e0", borderRadius: 0,
+    background: "#ffffff", color: "#1e293b", cursor: "pointer",
     display: "flex", alignItems: "center", justifyContent: "center",
     transition: "all 0.1s", lineHeight: 1,
     WebkitTapHighlightColor: "transparent",
   },
   numKeySubmit: {
-    background: "#166534", borderColor: "#22c55e", fontSize: 24,
+    background: "#374151", borderColor: "#374151", color: "#ffffff", fontSize: 24,
   },
   numKeyClear: {
-    color: "#94a3b8", fontSize: 18,
+    color: "#1e293b", fontSize: 24,
   },
   finalScore: {
-    fontSize: 72, fontWeight: 800, fontFamily: FONT, margin: "16px 0",
-    color: "#fff", letterSpacing: 4,
+    fontSize: 72, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", margin: "16px 0",
+    color: "#1e293b", letterSpacing: 4,
   },
 };
