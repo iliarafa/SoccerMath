@@ -271,17 +271,32 @@ export default function MathSoccer() {
       <div style={S.wrap}>
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.6s ease-out" }}>
-          <img src="/soccer-ball.png" alt="Soccer ball" style={S.menuBall} />
+          <img
+            src="/soccer-ball.png"
+            alt="Soccer ball"
+            style={{ ...S.menuBall, cursor: "pointer" }}
+            onClick={() => setScreen("modeSelect")}
+          />
           <h1 style={S.title}>SOCCER<br/>MATH</h1>
           <p style={S.subtitle}>ANSWER FAST · SCORE GOALS</p>
+        </div>
+      </div>
+    );
+  }
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "center", marginTop: 40 }}>
+  // --- MODE SELECT ---
+  if (screen === "modeSelect") {
+    return (
+      <div style={S.wrap}>
+        <style>{globalCSS}</style>
+        <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 14, alignItems: "center" }}>
             <button onClick={() => { setVsMode("bot"); setScreen("difficulty"); }} style={{ ...S.btn, borderColor: "#22c55e", color: "#16a34a" }}
               onMouseEnter={e => e.target.style.background = "#22c55e15"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS BOT</button>
-            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#fbbf24", color: "#fbbf24" }}
-              onMouseEnter={e => e.target.style.background = "#fbbf2415"}
+            <button onClick={() => beginGame("human")} style={{ ...S.btn, borderColor: "#ef4444", color: "#ef4444" }}
+              onMouseEnter={e => e.target.style.background = "#ef444415"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >VS HUMAN</button>
           </div>
@@ -302,14 +317,14 @@ export default function MathSoccer() {
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out" }}>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#ffffff" }}>DIFFICULTY</h2>
-          {[["easy", "EASY", "#22c55e"], ["medium", "MEDIUM", "#f59e0b"], ["hard", "HARD", "#ef4444"]].map(([k, l, c]) => (
-            <button key={k} onClick={() => beginGame("bot", k)} style={{ ...S.btn, borderColor: c, color: c, marginBottom: 12 }}
-              onMouseEnter={e => e.target.style.background = `${c}15`}
+          {[["easy", "EASY"], ["medium", "MEDIUM"], ["hard", "HARD"]].map(([k, l]) => (
+            <button key={k} onClick={() => beginGame("bot", k)} style={{ ...S.btn, borderColor: "rgba(255,255,255,0.3)", color: "#ffffff", marginBottom: 12 }}
+              onMouseEnter={e => e.target.style.background = "rgba(255,255,255,0.08)"}
               onMouseLeave={e => e.target.style.background = "transparent"}
             >{l}</button>
           ))}
           <br />
-          <button onClick={() => setScreen("menu")} style={{ ...S.link, color: "#ffffff" }}>← BACK</button>
+          <button onClick={() => setScreen("modeSelect")} style={{ ...S.link, color: "#ffffff" }}>← BACK</button>
         </div>
       </div>
     );
@@ -330,7 +345,7 @@ export default function MathSoccer() {
             First to {WIN_AT} goals wins the match.
           </div>
           <br />
-          <button onClick={() => setScreen("menu")} style={S.link}>← BACK</button>
+          <button onClick={() => setScreen("modeSelect")} style={S.link}>← BACK</button>
         </div>
       </div>
     );
