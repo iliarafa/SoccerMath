@@ -8,6 +8,24 @@ const BOT = {
   hard: { min: 1000, max: 2200, err: 0.05 },
 };
 
+const ZONES = [
+  { role: "Goalkeeper",  ballX: 15 },  // streak 0
+  { role: "Defender",    ballX: 28 },  // streak 1
+  { role: "Midfielder",  ballX: 45 },  // streak 2
+  { role: "Winger",      ballX: 65 },  // streak 3
+  { role: "Striker",     ballX: 82 },  // streak 4
+];
+const ZONE_LABELS = ["GK", "DEF", "MID", "WING", "STR"];
+
+// Map streak to player indices that are "active" in that zone
+const ZONE_PLAYER_INDICES = [
+  [0],     // streak 0 → GK
+  [1, 2],  // streak 1 → DEFs
+  [3, 4],  // streak 2 → MIDs
+  [5, 6],  // streak 3 → WINGs
+  [7],     // streak 4 → STRIKER
+];
+
 const genProblem = () => {
   const ops = ["+", "−", "×"];
   const op = ops[Math.floor(Math.random() * 3)];
@@ -19,19 +37,21 @@ const genProblem = () => {
 };
 
 // Player formation positions (percentage-based on field)
-// Red team (left/P1): GK, 2 DEF, 2 MID, 1 FWD
+// Red team (left/P1): GK, 2 DEF, 2 MID, 2 WING, 1 STRIKER (8 players)
 const RED_BASE = [
-  { x: 6, y: 50 },
-  { x: 22, y: 28 }, { x: 22, y: 72 },
-  { x: 40, y: 35 }, { x: 40, y: 65 },
-  { x: 55, y: 50 },
+  { x: 6, y: 50 },                      // 0: GK
+  { x: 20, y: 30 }, { x: 20, y: 70 },   // 1-2: DEF
+  { x: 36, y: 35 }, { x: 36, y: 65 },   // 3-4: MID
+  { x: 52, y: 28 }, { x: 52, y: 72 },   // 5-6: WING
+  { x: 64, y: 50 },                      // 7: STRIKER
 ];
-// Blue team (right/P2): GK, 2 DEF, 2 MID, 1 FWD
+// Blue team (right/P2): GK, 2 DEF, 2 MID, 2 WING, 1 STRIKER (8 players)
 const BLUE_BASE = [
-  { x: 94, y: 50 },
-  { x: 78, y: 28 }, { x: 78, y: 72 },
-  { x: 60, y: 35 }, { x: 60, y: 65 },
-  { x: 45, y: 50 },
+  { x: 94, y: 50 },                      // 0: GK
+  { x: 80, y: 30 }, { x: 80, y: 70 },   // 1-2: DEF
+  { x: 64, y: 35 }, { x: 64, y: 65 },   // 3-4: MID
+  { x: 48, y: 28 }, { x: 48, y: 72 },   // 5-6: WING
+  { x: 36, y: 50 },                      // 7: STRIKER
 ];
 
 const getFormation = (base, possession, streak, isAttacking) => {
@@ -155,6 +175,9 @@ export default function MathSoccer() {
     } else {
       newPoss = curPoss;
       newStreak = curStreak + 1;
+      if (newStreak < GOAL_AT && newStreak < ZONES.length) {
+        setMsg(`${ZONES[newStreak].role} receives the ball!`);
+      }
     }
 
     setPoss(newPoss);
@@ -257,11 +280,12 @@ export default function MathSoccer() {
     return () => { if (botTimer.current) clearTimeout(botTimer.current); };
   }, []);
 
-  // Ball position on field
+  // Ball position on field (zone-snapped)
+  const zoneIndex = Math.min(streak, ZONES.length - 1);
   const ballX = poss === "p1"
-    ? 50 + (streak / GOAL_AT) * 40
+    ? ZONES[zoneIndex].ballX
     : poss === "p2"
-      ? 50 - (streak / GOAL_AT) * 40
+      ? 100 - ZONES[zoneIndex].ballX
       : 50;
   const ballY = 50;
 
@@ -337,10 +361,12 @@ export default function MathSoccer() {
         <style>{globalCSS}</style>
         <div style={{ textAlign: "center", animation: "fadeUp 0.5s ease-out", maxWidth: 320 }}>
           <h2 style={{ fontSize: 32, fontWeight: 800, letterSpacing: 3, marginBottom: 36, color: "#ffffff" }}>HOW TO PLAY</h2>
-          <div style={{ color: "#94a3b8", fontSize: 14, lineHeight: 2.2, textAlign: "left" }}>
+          <div style={{ color: "#ffffff", fontSize: 14, lineHeight: 2.2, textAlign: "left" }}>
             Solve math problems faster than your opponent.<br/><br/>
             Fastest correct answer → ball possession.<br/><br/>
-            5 consecutive answers → ⚽ GOAL!<br/><br/>
+            Move the ball through zones:<br/>
+            GK → DEF → MID → WING → STRIKER<br/><br/>
+            5 consecutive answers → GOAL!<br/><br/>
             One interception resets the streak.<br/><br/>
             First to {WIN_AT} goals wins the match.
           </div>
@@ -394,24 +420,26 @@ export default function MathSoccer() {
           </div>
         </div>
 
-        {/* STREAK INDICATOR */}
+        {/* STREAK INDICATOR - Zone segments */}
         <div style={S.streakBar}>
-          {Array.from({ length: GOAL_AT }).map((_, i) => {
+          {ZONE_LABELS.map((label, i) => {
             const filled = poss === "p2" && i < streak;
             return <div key={`l${i}`} style={{
-              ...S.streakDot,
-              background: filled ? "#3b82f6" : "#e2e8f0",
+              ...S.zoneSeg,
+              background: filled ? "#3b82f6" : "rgba(255,255,255,0.1)",
+              color: filled ? "#fff" : "#64748b",
               boxShadow: filled ? "0 0 8px #3b82f660" : "none",
-            }} />;
+            }}>{ZONE_LABELS[ZONE_LABELS.length - 1 - i]}</div>;
           }).reverse()}
-          <div style={{ ...S.streakDot, width: 8, height: 8, background: "#94a3b8", boxShadow: "0 0 6px #94a3b860" }}>⚽</div>
-          {Array.from({ length: GOAL_AT }).map((_, i) => {
+          <div style={S.zoneGoalIcon}>⚽</div>
+          {ZONE_LABELS.map((label, i) => {
             const filled = poss === "p1" && i < streak;
             return <div key={`r${i}`} style={{
-              ...S.streakDot,
-              background: filled ? "#22c55e" : "#e2e8f0",
+              ...S.zoneSeg,
+              background: filled ? "#22c55e" : "rgba(255,255,255,0.1)",
+              color: filled ? "#fff" : "#64748b",
               boxShadow: filled ? "0 0 8px #22c55e60" : "none",
-            }} />;
+            }}>{label}</div>;
           })}
         </div>
 
@@ -440,37 +468,69 @@ export default function MathSoccer() {
           <div style={{ ...S.goalNet, left: -6 }} />
           <div style={{ ...S.goalNet, right: -6 }} />
 
-          {/* Players - Red (P1) */}
-          {redPlayers.map((p, i) => (
-            <div key={`r${i}`} style={{
-              position: "absolute",
-              left: `${p.x}%`, top: `${p.y}%`,
-              transform: "translate(-50%, -50%)",
-              width: i === 0 ? 14 : 12, height: i === 0 ? 14 : 12,
-              borderRadius: "50%",
-              background: i === 0 ? "#dc2626" : "#ef4444",
-              border: "2px solid #fca5a5",
-              boxShadow: "0 2px 4px #00000060",
-              transition: "left 0.6s ease, top 0.6s ease",
-              zIndex: 3,
+          {/* Zone divider lines */}
+          {[20, 40, 60, 80].map(pct => (
+            <div key={`zd${pct}`} style={{
+              position: "absolute", top: "4%", bottom: "4%",
+              left: `${pct}%`, width: 1,
+              borderLeft: "1px dashed rgba(255,255,255,0.15)",
+              zIndex: 2,
             }} />
           ))}
 
+          {/* Highlighted zone overlay */}
+          {poss && streak < GOAL_AT && (() => {
+            const teamColor = poss === "p1" ? "34,197,94" : "59,130,246";
+            const zx = ZONES[zoneIndex].ballX;
+            const x = poss === "p1" ? zx : 100 - zx;
+            return (
+              <div style={{
+                position: "absolute", top: 0, bottom: 0,
+                left: `${x - 10}%`, width: "20%",
+                background: `rgba(${teamColor},0.08)`,
+                transition: "left 0.5s ease",
+                zIndex: 1,
+              }} />
+            );
+          })()}
+
+          {/* Players - Red (P1) */}
+          {redPlayers.map((p, i) => {
+            const isActive = poss === "p1" && ZONE_PLAYER_INDICES[zoneIndex]?.includes(i);
+            return (
+              <div key={`r${i}`} style={{
+                position: "absolute",
+                left: `${p.x}%`, top: `${p.y}%`,
+                transform: "translate(-50%, -50%)",
+                width: i === 0 ? 14 : 12, height: i === 0 ? 14 : 12,
+                borderRadius: "50%",
+                background: i === 0 ? "#dc2626" : "#ef4444",
+                border: isActive ? "2px solid #fff" : "2px solid #fca5a5",
+                boxShadow: isActive ? "0 0 10px #22c55e, 0 0 20px #22c55e60" : "0 2px 4px #00000060",
+                transition: "left 0.6s ease, top 0.6s ease, box-shadow 0.3s ease, border 0.3s ease",
+                zIndex: isActive ? 4 : 3,
+              }} />
+            );
+          })}
+
           {/* Players - Blue (P2/Bot) */}
-          {bluePlayers.map((p, i) => (
-            <div key={`b${i}`} style={{
-              position: "absolute",
-              left: `${p.x}%`, top: `${p.y}%`,
-              transform: "translate(-50%, -50%)",
-              width: i === 0 ? 14 : 12, height: i === 0 ? 14 : 12,
-              borderRadius: "50%",
-              background: i === 0 ? "#1d4ed8" : "#3b82f6",
-              border: "2px solid #93c5fd",
-              boxShadow: "0 2px 4px #00000060",
-              transition: "left 0.6s ease, top 0.6s ease",
-              zIndex: 3,
-            }} />
-          ))}
+          {bluePlayers.map((p, i) => {
+            const isActive = poss === "p2" && ZONE_PLAYER_INDICES[zoneIndex]?.includes(i);
+            return (
+              <div key={`b${i}`} style={{
+                position: "absolute",
+                left: `${p.x}%`, top: `${p.y}%`,
+                transform: "translate(-50%, -50%)",
+                width: i === 0 ? 14 : 12, height: i === 0 ? 14 : 12,
+                borderRadius: "50%",
+                background: i === 0 ? "#1d4ed8" : "#3b82f6",
+                border: isActive ? "2px solid #fff" : "2px solid #93c5fd",
+                boxShadow: isActive ? "0 0 10px #3b82f6, 0 0 20px #3b82f660" : "0 2px 4px #00000060",
+                transition: "left 0.6s ease, top 0.6s ease, box-shadow 0.3s ease, border 0.3s ease",
+                zIndex: isActive ? 4 : 3,
+              }} />
+            );
+          })}
 
           {/* Ball */}
           <div style={{
@@ -676,12 +736,17 @@ const S = {
     display: "flex", alignItems: "center", justifyContent: "center",
     gap: 4, padding: "6px 0", flexShrink: 0,
   },
-  streakDot: {
-    width: 10, height: 10, borderRadius: 2,
-    transition: "all 0.3s", display: "flex", alignItems: "center",
-    justifyContent: "center", fontSize: 6,
+  zoneSeg: {
+    padding: "2px 4px", borderRadius: 3, fontSize: 8, fontWeight: 700,
+    fontFamily: "system-ui, -apple-system, sans-serif",
+    letterSpacing: 0.5, transition: "all 0.3s",
+    display: "flex", alignItems: "center", justifyContent: "center",
+    minWidth: 28,
   },
-  streakDotEmpty: "#e2e8f0",
+  zoneGoalIcon: {
+    width: 16, height: 16, display: "flex", alignItems: "center",
+    justifyContent: "center", fontSize: 10, flexShrink: 0,
+  },
   // Field
   field: {
     position: "relative", width: "100%", aspectRatio: "2.2 / 1",
