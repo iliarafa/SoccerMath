@@ -401,13 +401,24 @@ export default function MathSoccer() {
   const bluePlayers = getFormation(BLUE_BASE, poss, streak, poss === "p2");
 
   return (
-    <div style={S.wrap}>
+    <div style={{ ...S.wrap, paddingBottom: 0 }}>
       <style>{globalCSS}</style>
 
       <div style={S.gameContainer}>
         <div style={S.gameInner}>
 
         {/* SCOREBOARD */}
+        <div style={{ padding: "48px 0 20px", position: "relative" }}>
+        <button onClick={() => {
+          if (botTimer.current) clearTimeout(botTimer.current);
+          setActive(false); activeRef.current = false;
+          setScreen("menu");
+        }} style={{ ...S.link, position: "absolute", top: 12, left: 0 }}>QUIT</button>
+        {vsMode === "human" && countdown === null && !goalAnim && (
+          <div style={{ position: "absolute", bottom: 2, right: 0, fontFamily: MONO, fontSize: 10, color: "#64748b" }}>
+            P2: keyboard
+          </div>
+        )}
         <div style={S.scoreboard}>
           <div style={{ ...S.scoreTeam, color: poss === "p1" ? "#ffffff" : "#64748b" }}>
             <div style={S.scoreLabel}>P1</div>
@@ -419,54 +430,60 @@ export default function MathSoccer() {
             <div style={S.scoreLabel}>{p2Label}</div>
           </div>
         </div>
+        </div>
 
         {/* STREAK INDICATOR - Zone segments */}
+        <div style={{ paddingBottom: 20 }}>
         <div style={S.streakBar}>
-          {ZONE_LABELS.map((label, i) => {
-            const filled = poss === "p2" && i < streak;
-            return <div key={`l${i}`} style={{
-              ...S.zoneSeg,
-              background: filled ? "#3b82f6" : "rgba(255,255,255,0.1)",
-              color: filled ? "#fff" : "#64748b",
-              boxShadow: filled ? "0 0 8px #3b82f660" : "none",
-            }}>{ZONE_LABELS[ZONE_LABELS.length - 1 - i]}</div>;
-          }).reverse()}
-          <div style={S.zoneGoalIcon}>⚽</div>
+          {/* P1 zones on left */}
           {ZONE_LABELS.map((label, i) => {
             const filled = poss === "p1" && i < streak;
-            return <div key={`r${i}`} style={{
+            return <div key={`l${i}`} style={{
               ...S.zoneSeg,
-              background: filled ? "#22c55e" : "rgba(255,255,255,0.1)",
-              color: filled ? "#fff" : "#64748b",
-              boxShadow: filled ? "0 0 8px #22c55e60" : "none",
+              background: filled ? "#dc2626" : "rgba(255,255,255,0.1)",
+              color: filled ? "#fff" : "#374151",
+              boxShadow: filled ? "0 0 8px #dc262660" : "none",
             }}>{label}</div>;
           })}
+          <img src="/soccer-ball.png" alt="" style={{ width: 24, height: 24, flexShrink: 0 }} />
+          {/* P2 zones on right (mirrored: STR→GK, fills from right) */}
+          {ZONE_LABELS.map((label, i) => {
+            const reverseI = ZONE_LABELS.length - 1 - i;
+            const filled = poss === "p2" && reverseI < streak;
+            return <div key={`r${i}`} style={{
+              ...S.zoneSeg,
+              background: filled ? "#3b82f6" : "rgba(255,255,255,0.1)",
+              color: filled ? "#fff" : "#374151",
+              boxShadow: filled ? "0 0 8px #3b82f660" : "none",
+            }}>{ZONE_LABELS[reverseI]}</div>;
+          })}
+        </div>
         </div>
 
         {/* FIELD */}
+        <div style={{ padding: "0 16px 16px" }}>
         <div style={S.field}>
           {/* grass stripes */}
-          {[0, 1, 2, 3, 4, 5, 6, 7].map(i => (
+          {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map(i => (
             <div key={i} style={{
               position: "absolute", top: 0, bottom: 0,
-              left: `${i * 12.5}%`, width: "12.5%",
+              left: `${i * 10}%`, width: "10%",
               background: i % 2 === 0 ? "#2d8a3e" : "#34993f",
             }} />
           ))}
-          {/* Field lines */}
-          <div style={S.fieldBorder} />
-          <div style={S.centerLine} />
-          <div style={S.centerCircle} />
-          <div style={S.centerDot} />
-          {/* Penalty areas */}
-          <div style={{ ...S.penaltyBox, left: 0 }} />
-          <div style={{ ...S.penaltyBox, right: 0 }} />
-          {/* Goal areas */}
-          <div style={{ ...S.goalBox, left: 0 }} />
-          <div style={{ ...S.goalBox, right: 0 }} />
-          {/* Goals */}
-          <div style={{ ...S.goalNet, left: -6 }} />
-          <div style={{ ...S.goalNet, right: -6 }} />
+          {/* Field markings SVG */}
+          <svg style={{ position: "absolute", inset: 0, width: "100%", height: "100%", zIndex: 2, opacity: 0.3 }} viewBox="0 0 160 100" preserveAspectRatio="none" fill="none" stroke="white" strokeWidth="1.5">
+            <rect x="5" y="4" width="150" height="92" />
+            <line x1="80" y1="4" x2="80" y2="96" />
+            <ellipse cx="80" cy="50" rx="14" ry="15" />
+            <circle cx="80" cy="50" r="1.5" fill="white" />
+            <rect x="5" y="20" width="22" height="60" />
+            <rect x="133" y="20" width="22" height="60" />
+            <rect x="5" y="32" width="11" height="36" />
+            <rect x="144" y="32" width="11" height="36" />
+            <rect x="0" y="38" width="5" height="24" strokeWidth="1" />
+            <rect x="155" y="38" width="5" height="24" strokeWidth="1" />
+          </svg>
 
           {/* Zone divider lines */}
           {[20, 40, 60, 80].map(pct => (
@@ -533,14 +550,14 @@ export default function MathSoccer() {
           })}
 
           {/* Ball */}
-          <div style={{
+          <img src="/soccer-ball.png" alt="" style={{
             position: "absolute",
             left: `${ballX}%`, top: `${ballY}%`,
             transform: "translate(-50%, -50%)",
-            fontSize: 16, zIndex: 5,
+            width: 20, height: 20, zIndex: 5,
             transition: "left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)",
             filter: "drop-shadow(0 2px 3px #00000080)",
-          }}>⚽</div>
+          }} />
 
           {/* Goal animation overlay */}
           {goalAnim && (
@@ -549,6 +566,7 @@ export default function MathSoccer() {
             </div>
           )}
 
+        </div>
         </div>
 
         {/* MESSAGE */}
@@ -575,7 +593,7 @@ export default function MathSoccer() {
         )}
         </div>{/* end gameInner */}
 
-        {/* NUMPAD WITH INPUT */}
+        {/* ANSWER + NUMPAD */}
         {!goalAnim && (
           <div style={S.numpad}>
             {/* Answer display row */}
@@ -615,7 +633,7 @@ export default function MathSoccer() {
                         opacity: !active ? 0.5 : 1,
                       }}
                     >
-                      {isSubmit ? "⚽" : isNeg ? "±" : key}
+                      {isSubmit ? <img src="/soccer-ball.png" alt="Submit" style={{ width: 48, height: 48 }} /> : isNeg ? "±" : key}
                     </button>
                   );
                 })}
@@ -623,21 +641,6 @@ export default function MathSoccer() {
             ))}
           </div>
         )}
-
-        {/* VS HUMAN note */}
-        {vsMode === "human" && countdown === null && !goalAnim && (
-          <div style={{ textAlign: "center", marginTop: 4, fontFamily: MONO, fontSize: 10, color: "#64748b", flexShrink: 0, padding: "0 8px" }}>
-            P2: use keyboard (numbers + Enter)
-          </div>
-        )}
-
-        <div style={{ textAlign: "center", marginTop: 6, flexShrink: 0, padding: "0 8px" }}>
-          <button onClick={() => {
-            if (botTimer.current) clearTimeout(botTimer.current);
-            setActive(false); activeRef.current = false;
-            setScreen("menu");
-          }} style={S.link}>QUIT</button>
-        </div>
       </div>
     </div>
   );
@@ -703,9 +706,9 @@ const S = {
     display: "flex", flexDirection: "column",
     height: "100%", overflow: "hidden",
   },
-  // Inner padding for non-numpad elements
+  // Inner section for top content (scoreboard through problem)
   gameInner: {
-    padding: "8px 8px 0",
+    padding: "0 8px 0",
     flex: 1,
     minHeight: 0,
     overflow: "hidden",
@@ -715,21 +718,21 @@ const S = {
   // Scoreboard
   scoreboard: {
     display: "flex", alignItems: "center", justifyContent: "center",
-    padding: "0", gap: 0, flexShrink: 0,
+    padding: "0", gap: 24, flexShrink: 0,
   },
   scoreTeam: {
-    display: "flex", alignItems: "center", gap: 8, flex: 1,
+    display: "flex", alignItems: "baseline", gap: 8, flex: 1,
     justifyContent: "center",
   },
   scoreLabel: {
     fontSize: 12, fontWeight: 700, letterSpacing: 2, opacity: 0.6,
   },
   scoreNum: {
-    fontSize: 36, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", lineHeight: 1,
+    fontSize: 48, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", lineHeight: 1,
     color: "#ffffff",
   },
   scoreDivider: {
-    fontSize: 36, fontWeight: 800, color: "#94a3b8", padding: "0 4px",
+    fontSize: 48, fontWeight: 800, color: "white", padding: "0 4px",
   },
   // Streak bar
   streakBar: {
@@ -737,53 +740,17 @@ const S = {
     gap: 4, padding: "6px 0", flexShrink: 0,
   },
   zoneSeg: {
-    padding: "2px 4px", borderRadius: 3, fontSize: 8, fontWeight: 700,
+    width: 28, height: 16, borderRadius: 4, fontSize: 8, fontWeight: 700,
     fontFamily: "system-ui, -apple-system, sans-serif",
     letterSpacing: 0.5, transition: "all 0.3s",
     display: "flex", alignItems: "center", justifyContent: "center",
-    minWidth: 28,
-  },
-  zoneGoalIcon: {
-    width: 16, height: 16, display: "flex", alignItems: "center",
-    justifyContent: "center", fontSize: 10, flexShrink: 0,
   },
   // Field
   field: {
-    position: "relative", width: "100%", aspectRatio: "2.2 / 1",
+    position: "relative", width: "100%", aspectRatio: "1.6 / 1",
     borderRadius: 8, overflow: "hidden",
-    boxShadow: "0 4px 24px #00000040, inset 0 0 40px #00000020",
-    border: "3px solid #1e5631", flexShrink: 1, minHeight: 80, maxHeight: 160,
-  },
-  fieldBorder: {
-    position: "absolute", top: "4%", left: "3%", right: "3%", bottom: "4%",
-    border: "2px solid rgba(255,255,255,0.35)", zIndex: 2,
-  },
-  centerLine: {
-    position: "absolute", top: "4%", bottom: "4%", left: "50%",
-    width: 2, background: "rgba(255,255,255,0.3)", transform: "translateX(-50%)",
-    zIndex: 2,
-  },
-  centerCircle: {
-    position: "absolute", top: "50%", left: "50%", width: "18%", height: "30%",
-    border: "2px solid rgba(255,255,255,0.3)", borderRadius: "50%",
-    transform: "translate(-50%,-50%)", zIndex: 2,
-  },
-  centerDot: {
-    position: "absolute", top: "50%", left: "50%", width: 6, height: 6,
-    background: "rgba(255,255,255,0.4)", borderRadius: "50%",
-    transform: "translate(-50%,-50%)", zIndex: 2,
-  },
-  penaltyBox: {
-    position: "absolute", top: "20%", width: "16%", height: "60%",
-    border: "2px solid rgba(255,255,255,0.3)", zIndex: 2,
-  },
-  goalBox: {
-    position: "absolute", top: "32%", width: "8%", height: "36%",
-    border: "2px solid rgba(255,255,255,0.25)", zIndex: 2,
-  },
-  goalNet: {
-    position: "absolute", top: "38%", width: 6, height: "24%",
-    background: "rgba(255,255,255,0.15)", zIndex: 2, borderRadius: 2,
+    boxShadow: "inset 0 2px 8px rgba(0,0,0,0.3)",
+    flexShrink: 1, minHeight: 80,
   },
   goalOverlay: {
     position: "absolute", inset: 0, background: "rgba(0,0,0,0.55)",
@@ -799,18 +766,18 @@ const S = {
   },
   // Message
   msgBar: {
-    textAlign: "center", height: 16, marginTop: 2,
+    textAlign: "center", height: 16, padding: "0 0 20px 0",
     fontFamily: MONO, fontSize: 10, letterSpacing: 1, color: "#ffffff",
     flexShrink: 0,
   },
   // Problem area
   problemArea: {
-    textAlign: "center", padding: "4px 0", flex: 1,
+    textAlign: "center", padding: "0 0 12px 0",
     display: "flex", alignItems: "center", justifyContent: "center",
     minHeight: 40,
   },
   problemText: {
-    fontSize: 28, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
+    fontSize: 40, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif",
     letterSpacing: 2, color: "#ffffff",
   },
   countdownText: {
@@ -820,15 +787,15 @@ const S = {
   },
   answerDisplay: {
     margin: "0", width: "100%", padding: "8px 16px",
-    fontSize: 24, fontWeight: 400, fontFamily: "system-ui, -apple-system, sans-serif", textAlign: "center",
+    fontSize: 32, fontWeight: 700, fontFamily: "system-ui, -apple-system, sans-serif", textAlign: "center",
     background: "#f5f5f5", borderRadius: 0, border: "1px solid #e0e0e0",
-    color: "#1e293b", height: 44, lineHeight: "28px",
+    color: "#1e293b", height: 64, lineHeight: "48px",
     position: "relative", boxSizing: "border-box",
   },
   answerClear: {
     position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)",
-    width: 32, height: 32, borderRadius: "50%", border: "2px solid #9e9e9e",
-    background: "transparent", color: "#9e9e9e", fontSize: 18,
+    width: 32, height: 32, borderRadius: "50%", border: "1px solid #9ca3af",
+    background: "transparent", color: "#9ca3af", fontSize: 18,
     display: "flex", alignItems: "center", justifyContent: "center",
     cursor: "pointer",
   },
@@ -840,9 +807,9 @@ const S = {
     display: "flex", gap: 0, marginBottom: 0, justifyContent: "center",
   },
   numKey: {
-    flex: 1, height: 48, fontSize: 24, fontWeight: 400,
+    flex: 1, height: 64, fontSize: 24, fontWeight: 400,
     fontFamily: "system-ui, -apple-system, sans-serif",
-    border: "1px solid rgba(255,255,255,0.2)", borderRadius: 0,
+    border: "0.5px solid rgba(255,255,255,0.2)", borderRadius: 0,
     background: "rgba(255,255,255,0.15)",
     backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)",
     color: "#ffffff", cursor: "pointer",
